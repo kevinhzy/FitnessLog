@@ -1,0 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+
+  profile     Profile?
+  diaryEntries DiaryEntry[]
+  customFoods  Food[]
+  recipes      Recipe[]
+  workouts     Workout[]
+  exercises    Exercise[]
+}
+
+model Profile {
+  id             String  @id @default(cuid())
+  userId         String  @unique
+  user           User    @relation(fields: [userId], references: [id])
+  calorieGoal    Int?
+  proteinGoal    Float?
+  carbGoal       Float?
+  fatGoal        Float?
+  weight         Float?
+  height         Float?
+  dateOfBirth    DateTime?
+  activityLevel  String?
+  weightUnit     String @default("kg") 
+}
+
+model Food {
+  id          String  @id @default(cuid())
+  name        String
+  brand       String?
+  servingSize Float
+  servingUnit String
+
+  // Macros
+  calories    Float
+  protein     Float
+  carbs       Float
+  fat         Float
+  fiber       Float?
+  sugar       Float?
+
+  // Micros (optional for later)
+  sodium      Float?
+  calcium     Float?
+  iron        Float?
+  vitaminC    Float?
+
+  isCustom    Boolean @default(false)
+  createdBy   String?          // null = from API, userId = custom
+  user        User?   @relation(fields: [createdBy], references: [id])
+
+  diaryEntries     DiaryEntry[]
+  recipeIngredients RecipeIngredient[]
+}
+
+model DiaryEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  foodId    String?
+  food      Food?    @relation(fields: [foodId], references: [id])
+  recipeId  String?
+  recipe    Recipe?  @relation(fields: [recipeId], references: [id])
+  date      DateTime
+  mealType  String   // "breakfast" | "lunch" | "dinner" | "snack"
+  amount    Float    // multiplier of serving size
+  createdAt DateTime @default(now())
+}
+
+model Recipe {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  name        String
+  servings    Int      @default(1)
+  createdAt   DateTime @default(now())
+
+  ingredients  RecipeIngredient[]
+  diaryEntries DiaryEntry[]
+}
+
+model RecipeIngredient {
+  id       String @id @default(cuid())
+  recipeId String
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  foodId   String
+  food     Food   @relation(fields: [foodId], references: [id])
+  amount   Float
+}
+
+model Exercise {
+  id          String  @id @default(cuid())
+  name        String
+  category    String  // "chest" | "back" | "legs" | "shoulders" | "arms" | "core"
+  equipment   String? // "barbell" | "dumbbell" | "machine" | "bodyweight"
+  isCustom    Boolean @default(false)
+  createdBy   String?
+  user        User?   @relation(fields: [createdBy], references: [id])
+
+  workoutExercises WorkoutExercise[]
+}
+
+model Workout {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String?  // e.g. "Push Day", "Leg Day"
+  date      DateTime
+  notes     String?
+  createdAt DateTime @default(now())
+
+  exercises WorkoutExercise[]
+}
+
+model WorkoutExercise {
+  id         String   @id @default(cuid())
+  workoutId  String
+  workout    Workout  @relation(fields: [workoutId], references: [id])
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  order      Int      // display order within the workout
+
+  sets ExerciseSet[]
+}
+
+model ExerciseSet {
+  id                String  @id @default(cuid())
+  workoutExerciseId String
+  workoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id])
+  setNumber         Int
+  reps              Int?
+  weight            Float?  // in kg or lbs depending on user preference
+  rpe               Float?  // Rate of Perceived Exertion (1-10), optional but nice
+  notes             String?
+  completed         Boolean @default(false)
+}
