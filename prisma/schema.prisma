@@ -17,6 +17,7 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
+  password  String?
   createdAt DateTime @default(now())
 
   profile     Profile?
@@ -108,7 +109,7 @@ model RecipeIngredient {
 
 model Exercise {
   id          String  @id @default(cuid())
-  name        String
+  name        String  @unique
   category    String  // "chest" | "back" | "legs" | "shoulders" | "arms" | "core"
   equipment   String? // "barbell" | "dumbbell" | "machine" | "bodyweight"
   isCustom    Boolean @default(false)
