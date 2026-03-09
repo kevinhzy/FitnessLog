@@ -11,7 +11,8 @@ export async function GET(req: NextRequest) {
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
   });
-  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   const workouts = await prisma.workout.findMany({
     where: { userId: user.id },
@@ -38,7 +39,8 @@ export async function POST(req: NextRequest) {
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
   });
-  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   const { name, date } = await req.json();
 

@@ -39,12 +39,15 @@ export async function GET(req: NextRequest) {
             isCustom: false,
           },
         });
-      })
+      }),
     );
 
     return NextResponse.json({ foods: savedFoods });
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: "Failed to fetch foods" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch foods" },
+      { status: 500 },
+    );
   }
 }

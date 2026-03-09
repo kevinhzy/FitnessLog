@@ -11,7 +11,8 @@ export async function GET(req: NextRequest) {
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
   });
-  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   const query = req.nextUrl.searchParams.get("query") ?? "";
   const category = req.nextUrl.searchParams.get("category") ?? undefined;
@@ -22,10 +23,7 @@ export async function GET(req: NextRequest) {
         query ? { name: { contains: query, mode: "insensitive" } } : {},
         category ? { category } : {},
         {
-          OR: [
-            { isCustom: false },
-            { createdBy: user.id },
-          ],
+          OR: [{ isCustom: false }, { createdBy: user.id }],
         },
       ],
     },
@@ -44,14 +42,15 @@ export async function POST(req: NextRequest) {
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
   });
-  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   const { name, category, equipment } = await req.json();
 
   if (!name || !category) {
     return NextResponse.json(
       { error: "Name and category are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 

@@ -3,7 +3,7 @@ const API_KEY = process.env.USDA_API_KEY!;
 
 export async function searchFoods(query: string, pageSize = 10) {
   const res = await fetch(
-    `${BASE_URL}/foods/search?query=${encodeURIComponent(query)}&pageSize=${pageSize}&api_key=${API_KEY}`
+    `${BASE_URL}/foods/search?query=${encodeURIComponent(query)}&pageSize=${pageSize}&api_key=${API_KEY}`,
   );
   if (!res.ok) {
     const error = await res.json();
@@ -14,9 +14,7 @@ export async function searchFoods(query: string, pageSize = 10) {
 }
 
 export async function getFoodById(fdcId: string) {
-  const res = await fetch(
-    `${BASE_URL}/food/${fdcId}?api_key=${API_KEY}`
-  );
+  const res = await fetch(`${BASE_URL}/food/${fdcId}?api_key=${API_KEY}`);
   if (!res.ok) {
     const error = await res.json();
     console.error("USDA API error:", error);

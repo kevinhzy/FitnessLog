@@ -24,7 +24,9 @@ type DiaryEntry = {
 const MEAL_TYPES = ["breakfast", "lunch", "dinner", "snack"];
 
 export default function DiaryPage() {
-  const [date, setDate] = useState(() => new Date().toISOString().split("T")[0]);
+  const [date, setDate] = useState(
+    () => new Date().toISOString().split("T")[0],
+  );
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Food[]>([]);
@@ -47,7 +49,9 @@ export default function DiaryPage() {
   async function searchFoods() {
     if (!searchQuery.trim()) return;
     setSearching(true);
-    const res = await fetch(`/api/foods?query=${encodeURIComponent(searchQuery)}`);
+    const res = await fetch(
+      `/api/foods?query=${encodeURIComponent(searchQuery)}`,
+    );
     const data = await res.json();
     setSearchResults(data.foods ?? []);
     setSearching(false);
@@ -83,7 +87,7 @@ export default function DiaryPage() {
       carbs: acc.carbs + entry.food.carbs * entry.amount,
       fat: acc.fat + entry.food.fat * entry.amount,
     }),
-    { calories: 0, protein: 0, carbs: 0, fat: 0 }
+    { calories: 0, protein: 0, carbs: 0, fat: 0 },
   );
 
   return (
@@ -101,7 +105,11 @@ export default function DiaryPage() {
       {/* Macro Summary */}
       <div className="bg-white rounded-xl shadow p-4 mb-6 grid grid-cols-4 gap-4 text-center">
         {[
-          { label: "Calories", value: totals.calories.toFixed(0), unit: "kcal" },
+          {
+            label: "Calories",
+            value: totals.calories.toFixed(0),
+            unit: "kcal",
+          },
           { label: "Protein", value: totals.protein.toFixed(1), unit: "g" },
           { label: "Carbs", value: totals.carbs.toFixed(1), unit: "g" },
           { label: "Fat", value: totals.fat.toFixed(1), unit: "g" },
@@ -141,7 +149,8 @@ export default function DiaryPage() {
                   <div>
                     <p className="font-medium">{entry.food.name}</p>
                     <p className="text-gray-400 text-xs">
-                      {entry.food.servingSize * entry.amount}{entry.food.servingUnit} ·{" "}
+                      {entry.food.servingSize * entry.amount}
+                      {entry.food.servingUnit} ·{" "}
                       {(entry.food.calories * entry.amount).toFixed(0)} kcal
                     </p>
                   </div>
@@ -182,7 +191,8 @@ export default function DiaryPage() {
                     <div>
                       <p className="font-medium">{food.name}</p>
                       <p className="text-gray-400 text-xs">
-                        {food.servingSize}{food.servingUnit} · {food.calories.toFixed(0)} kcal
+                        {food.servingSize}
+                        {food.servingUnit} · {food.calories.toFixed(0)} kcal
                       </p>
                     </div>
                     <button

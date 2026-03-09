@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await auth();
   if (!session?.user?.email) {
@@ -26,14 +26,15 @@ export async function GET(
     },
   });
 
-  if (!workout) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!workout)
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   return NextResponse.json(workout);
 }
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await auth();
   if (!session?.user?.email) {
@@ -65,7 +66,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await auth();
   if (!session?.user?.email) {

@@ -11,10 +11,12 @@ export async function GET(req: NextRequest) {
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
   });
-  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   const date = req.nextUrl.searchParams.get("date");
-  if (!date) return NextResponse.json({ error: "Date required" }, { status: 400 });
+  if (!date)
+    return NextResponse.json({ error: "Date required" }, { status: 400 });
 
   const entries = await prisma.diaryEntry.findMany({
     where: {
@@ -40,12 +42,16 @@ export async function POST(req: NextRequest) {
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
   });
-  if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   const { foodId, mealType, amount, date } = await req.json();
 
   if (!foodId || !mealType || !amount || !date) {
-    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing required fields" },
+      { status: 400 },
+    );
   }
 
   const entry = await prisma.diaryEntry.create({

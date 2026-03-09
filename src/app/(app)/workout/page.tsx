@@ -60,7 +60,7 @@ export default function WorkoutPage() {
 
   async function searchExercises() {
     const res = await fetch(
-      `/api/exercises?query=${encodeURIComponent(exerciseQuery)}`
+      `/api/exercises?query=${encodeURIComponent(exerciseQuery)}`,
     );
     const data = await res.json();
     setExercises(Array.isArray(data) ? data : []);
@@ -85,7 +85,7 @@ export default function WorkoutPage() {
     });
     const data = await res.json();
     setActiveWorkout((prev) =>
-      prev ? { ...prev, exercises: [...prev.exercises, data] } : prev
+      prev ? { ...prev, exercises: [...prev.exercises, data] } : prev,
     );
     setShowExerciseSearch(false);
     setExerciseQuery("");
@@ -104,9 +104,7 @@ export default function WorkoutPage() {
       return {
         ...prev,
         exercises: prev.exercises.map((e) =>
-          e.id === workoutExerciseId
-            ? { ...e, sets: [...e.sets, newSet] }
-            : e
+          e.id === workoutExerciseId ? { ...e, sets: [...e.sets, newSet] } : e,
         ),
       };
     });
@@ -116,7 +114,7 @@ export default function WorkoutPage() {
     workoutExerciseId: string,
     setId: string,
     field: "reps" | "weight" | "completed",
-    value: number | boolean
+    value: number | boolean,
   ) {
     await fetch(`/api/workouts/${activeWorkout?.id}/sets`, {
       method: "PATCH",
@@ -132,10 +130,10 @@ export default function WorkoutPage() {
             ? {
                 ...e,
                 sets: e.sets.map((s) =>
-                  s.id === setId ? { ...s, [field]: value } : s
+                  s.id === setId ? { ...s, [field]: value } : s,
                 ),
               }
-            : e
+            : e,
         ),
       };
     });
@@ -210,7 +208,7 @@ export default function WorkoutPage() {
                           workoutExercise.id,
                           set.id,
                           "weight",
-                          parseFloat(e.target.value)
+                          parseFloat(e.target.value),
                         )
                       }
                       className="border rounded px-2 py-1 text-sm w-full"
@@ -224,7 +222,7 @@ export default function WorkoutPage() {
                           workoutExercise.id,
                           set.id,
                           "reps",
-                          parseInt(e.target.value)
+                          parseInt(e.target.value),
                         )
                       }
                       className="border rounded px-2 py-1 text-sm w-full"
@@ -238,7 +236,7 @@ export default function WorkoutPage() {
                           workoutExercise.id,
                           set.id,
                           "completed",
-                          e.target.checked
+                          e.target.checked,
                         )
                       }
                       className="w-4 h-4 mx-auto"
@@ -284,7 +282,8 @@ export default function WorkoutPage() {
                     <div>
                       <p className="font-medium">{exercise.name}</p>
                       <p className="text-xs text-gray-400 capitalize">
-                        {exercise.category} · {exercise.equipment ?? "bodyweight"}
+                        {exercise.category} ·{" "}
+                        {exercise.equipment ?? "bodyweight"}
                       </p>
                     </div>
                     <button
