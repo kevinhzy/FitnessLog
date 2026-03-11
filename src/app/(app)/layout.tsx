@@ -12,7 +12,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { href: "/home", label: "Home", icon: "🏠" },
     { href: "/diary", label: "Diary", icon: "🍎" },
     { href: "/workout", label: "Workout", icon: "💪" },
-    { href: "/dashboard", label: "Dashboard", icon: "📈" },
+    { href: "/dashboard", label: "Dashboard", icon: "📊" },
     { href: "/settings", label: "Settings", icon: "⚙️" },
   ];
 
@@ -29,9 +29,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <button
               key={link.href}
               onClick={() => router.push(link.href)}
-              className={`flex flex-col items-center gap-0.5 px-4 py-2 text-xs ${
-                isActive ? "text-black font-semibold" : "text-gray-400"
-              }`}
+              className={`flex flex-col items-center gap-0.5 px-4 py-2 text-xs ${isActive ? "text-black font-semibold" : "text-gray-400"
+                }`}
             >
               <span className="text-lg">{link.icon}</span>
               {link.label}
