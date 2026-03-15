@@ -3,8 +3,13 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -18,10 +23,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Page content */}
-      <div className="pb-20">{children}</div>
+      <div className="pb-20">
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
+      </div>
 
-      {/* Bottom navbar */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center h-16 z-50">
         {links.map((link) => {
           const isActive = pathname === link.href;
