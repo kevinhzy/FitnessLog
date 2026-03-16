@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { WorkoutSkeleton } from "@/components/Skeleton";
 import {
   LineChart,
   Line,
@@ -368,7 +369,7 @@ export default function WorkoutPage() {
       {activeTab === "history" && (
         <div>
           {loading ? (
-            <p className="text-gray-400 text-sm">Loading...</p>
+            <WorkoutSkeleton />
           ) : workouts.length === 0 ? (
             <p className="text-gray-400 text-sm">No workouts yet.</p>
           ) : (

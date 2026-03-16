@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { signOut } from "next-auth/react";
+import { SettingsSkeleton } from "@/components/Skeleton";
 
 type Profile = {
     calorieGoal: number | null;
@@ -64,8 +65,9 @@ export default function SettingsPage() {
     }
 
     if (loading) return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-            <p className="text-gray-400">Loading...</p>
+        <div className="min-h-screen bg-gray-50 p-6 max-w-2xl mx-auto">
+            <h1 className="text-2xl font-bold mb-6">Settings</h1>
+            <SettingsSkeleton />
         </div>
     );
 

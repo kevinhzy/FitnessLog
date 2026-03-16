@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { DiarySkeleton } from "@/components/Skeleton";
 
 type Food = {
   id: string;
@@ -124,7 +125,7 @@ export default function DiaryPage() {
 
       {/* Meal Sections */}
       {loading ? (
-        <p className="text-center text-gray-400">Loading...</p>
+        <DiarySkeleton />
       ) : (
         MEAL_TYPES.map((meal) => (
           <div key={meal} className="bg-white rounded-xl shadow p-4 mb-4">

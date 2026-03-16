@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { DashboardSkeleton } from "@/components/Skeleton";
 import {
   LineChart,
   Line,
@@ -112,7 +113,7 @@ export default function DashboardPage() {
       </div>
 
       {loading ? (
-        <p className="text-center text-gray-400">Loading...</p>
+        <DashboardSkeleton />
       ) : !data ? (
         <p className="text-center text-gray-400">Failed to load data.</p>
       ) : (
@@ -143,11 +144,10 @@ export default function DashboardPage() {
                 <button
                   key={n}
                   onClick={() => setActiveNutrient(n)}
-                  className={`text-xs px-3 py-1 rounded-full capitalize ${
-                    activeNutrient === n
-                      ? "bg-black text-white"
-                      : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                  }`}
+                  className={`text-xs px-3 py-1 rounded-full capitalize ${activeNutrient === n
+                    ? "bg-black text-white"
+                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                    }`}
                 >
                   {n}
                 </button>
