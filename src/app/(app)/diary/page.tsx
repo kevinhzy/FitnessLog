@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DiarySkeleton } from "@/components/Skeleton";
+import EmptyState from "@/components/EmptyState";
 
 type Food = {
   id: string;

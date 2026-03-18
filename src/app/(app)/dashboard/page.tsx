@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardSkeleton } from "@/components/Skeleton";
+import EmptyState from "@/components/EmptyState";
 import {
   LineChart,
   Line,
@@ -294,7 +295,11 @@ export default function DashboardPage() {
               </button>
             </div>
             {data.recentWorkouts.length === 0 ? (
-              <p className="text-sm text-gray-400">No workouts logged yet.</p>
+              <EmptyState
+                icon="📊"
+                title="No data yet"
+                message="Start logging workouts and food to see your progress here."
+              />
             ) : (
               data.recentWorkouts.map((workout) => (
                 <div

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { WorkoutSkeleton } from "@/components/Skeleton";
+import EmptyState from "@/components/EmptyState";
 import {
   LineChart,
   Line,
@@ -371,7 +372,12 @@ export default function WorkoutPage() {
           {loading ? (
             <WorkoutSkeleton />
           ) : workouts.length === 0 ? (
-            <p className="text-gray-400 text-sm">No workouts yet.</p>
+            <EmptyState
+              icon="💪"
+              title="No workouts yet"
+              message="Start your first workout to begin tracking your training."
+              action={{ label: "Start Workout", onClick: startWorkout }}
+            />
           ) : (
             workouts.map((workout) => (
               <div
@@ -462,9 +468,11 @@ export default function WorkoutPage() {
               <div className="bg-white rounded-xl shadow p-4 mb-4">
                 <h2 className="font-semibold mb-3">Exercise Progress</h2>
                 {progressData.trackedExercises.length === 0 ? (
-                  <p className="text-sm text-gray-400">
-                    No completed sets logged in this period.
-                  </p>
+                  <EmptyState
+                    icon="📈"
+                    title="No progress data yet"
+                    message="Complete sets with weight and reps to track your strength progress."
+                  />
                 ) : (
                   <>
                     <select
