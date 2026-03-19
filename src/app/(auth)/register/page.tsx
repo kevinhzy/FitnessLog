@@ -2,19 +2,40 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { validateEmail, validatePassword, validateName } from "@/lib/validation";
+
+type FormErrors = {
+  name?: string;
+  email?: string;
+  password?: string;
+};
 
 export default function RegisterPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.SubmitEvent) {
+  function validate(): boolean {
+    const newErrors: FormErrors = {};
+    const nameError = validateName(name);
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+    if (nameError) newErrors.name = nameError;
+    if (emailError) newErrors.email = emailError;
+    if (passwordError) newErrors.password = passwordError;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
+  async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
+    setServerError("");
+    if (!validate()) return;
     setLoading(true);
-    setError("");
 
     const res = await fetch("/api/auth/register", {
       method: "POST",
@@ -25,7 +46,7 @@ export default function RegisterPage() {
     const data = await res.json();
 
     if (!res.ok) {
-      setError(data.error);
+      setServerError(data.error);
       setLoading(false);
       return;
     }
@@ -45,31 +66,56 @@ export default function RegisterPage() {
             <input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+              onChange={(e) => {
+                setName(e.target.value);
+                if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
+              }}
+              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black ${errors.name ? "border-red-400" : ""
+                }`}
             />
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>
             <input
-              type="email"
+              type="text"
+              autoComplete="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
-              required
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+              }}
+              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black ${errors.email ? "border-red-400" : ""
+                }`}
             />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Password</label>
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
-              required
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
+              }}
+              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black ${errors.password ? "border-red-400" : ""
+                }`}
             />
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
+            <p className="text-xs text-gray-400 mt-1">
+              Min 8 characters, one uppercase letter and one number
+            </p>
           </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {serverError && (
+            <p className="text-red-500 text-sm">{serverError}</p>
+          )}
           <button
             type="submit"
             disabled={loading}
